@@ -17,17 +17,17 @@ class Rk4OdeSolver(OdeSolver):
     def step(self, system_state: SystemState) -> bool:
         if self.stage == 2 or self.stage == 3:
             for i in range(len(system_state.bodies)):
-                system_state.angular_velocities[i] = self.initial_state.angular_velocities[i] + self.dt * system_state.angular_accelerations[i] / 2
                 system_state.angles[i] = self.initial_state.angles[i] + self.dt * system_state.angular_velocities[i] / 2
-                system_state.velocities[i] = self.initial_state.velocities[i] + self.dt * system_state.accelerations[i] / 2
+                system_state.angular_velocities[i] = self.initial_state.angular_velocities[i] + self.dt * system_state.angular_accelerations[i] / 2
                 system_state.positions[i] = self.initial_state.positions[i] + self.dt * system_state.velocities[i] / 2
+                system_state.velocities[i] = self.initial_state.velocities[i] + self.dt * system_state.accelerations[i] / 2
 
         elif self.stage == 4:
             for i in range(len(system_state.bodies)):
-                system_state.angular_velocities[i] = self.initial_state.angular_velocities[i] + self.dt * system_state.angular_accelerations[i]
                 system_state.angles[i] = self.initial_state.angles[i] + self.dt * system_state.angular_velocities[i]
-                system_state.velocities[i] = self.initial_state.velocities[i] + self.dt * system_state.accelerations[i]
+                system_state.angular_velocities[i] = self.initial_state.angular_velocities[i] + self.dt * system_state.angular_accelerations[i]
                 system_state.positions[i] = self.initial_state.positions[i] + self.dt * system_state.velocities[i]
+                system_state.velocities[i] = self.initial_state.velocities[i] + self.dt * system_state.accelerations[i]
 
         self.next_stage += 1
         

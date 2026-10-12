@@ -6,7 +6,7 @@ from ..math.vector import Vector2
 
 
 class SpringForceGenerator(ForceGenerator):
-    def __init__(self, rest_length: float, spring_constant: float, damping: float, body1: RigidBody, body2: RigidBody, local_pos1: Vector2 = Vector2(), local_pos2: Vector2 = Vector2()) -> None:
+    def __init__(self, rest_length: float, spring_constant: float, damping: float, body1: RigidBody, body2: RigidBody, local_pos1: Vector2 | None = None, local_pos2: Vector2 | None = None) -> None:
         self.rest_length: float = rest_length
         self.spring_constant: float = spring_constant
         self.damping: float = damping
@@ -14,23 +14,24 @@ class SpringForceGenerator(ForceGenerator):
         self.body_1: RigidBody = body1
         self.body_2: RigidBody = body2
 
-        self.local_position_1: Vector2 = local_pos1
-        self.local_position_2: Vector2 = local_pos2
+        self.local_position_1: Vector2 = local_pos1 if local_pos1 is not None else Vector2()
+        self.local_position_2: Vector2 = local_pos2 if local_pos2 is not None else Vector2()
 
     def apply(self, system_state: SystemState) -> None:
-        delta = self.body_2.position - self.body_1.position
-        delta_velocity = self.body_2.velocity - self.body_1.velocity
+        delta = system_state.local_to_world(self.body_2, self.local_position_2) - system_state.local_to_world(self.body_1, self.local_position_1)
+        delta_velocity = system_state.velocity_at_point(self.body_2, self.local_position_2) - system_state.velocity_at_point(self.body_1, self.local_position_1)
 
         length = delta.length()
 
-        magnitude = (length - self.rest_length) * self.spring_constant
-
         if length == 0:
-            delta = Vector2(0.1, 0)
+            return
 
-        damping_force = delta_velocity.dot(delta.normalize()) * self.damping
+        direction = delta / length
 
-        force = (magnitude + damping_force) * delta.normalize()
+        magnitude = (length - self.rest_length) * self.spring_constant
+        damping_force = delta_velocity.dot(direction) * self.damping
+
+        force = (magnitude + damping_force) * direction
 
         system_state.apply_force(self.body_1, force, self.local_position_1)
         system_state.apply_force(self.body_2, -force, self.local_position_2)

@@ -6,11 +6,11 @@ from ..math.vector import Vector2
 
 
 class StaticForceGenerator(ForceGenerator):
-    def __init__(self, position: Vector2 = Vector2(), force: Vector2 = Vector2()) -> None:
-        self.position = position
-        self.force = force
+    def __init__(self, body: RigidBody, position: Vector2 | None = None, force: Vector2 | None = None) -> None:
+        self.body = body
 
-        self.body: RigidBody
+        self.position = position if position is not None else Vector2()
+        self.force = force if force is not None else Vector2()
 
     def apply(self, system_state: SystemState) -> None:
         system_state.apply_force(self.body, self.force, self.position)

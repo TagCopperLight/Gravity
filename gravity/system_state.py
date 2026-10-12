@@ -25,12 +25,13 @@ class SystemState:
     
     def velocity_at_point(self, body: RigidBody, local_point: Vector2) -> Vector2:
         index = self.bodies.index(body)
-        return self.velocities[index] + self.angular_velocities[index] * (self.local_to_world(body, local_point) - self.positions[index])
+        r = self.local_to_world(body, local_point) - self.positions[index]
+        return self.velocities[index] + self.angular_velocities[index] * Vector2(-r.y, r.x)
 
     def apply_force(self, body: RigidBody, force: Vector2, local_point: Vector2) -> None:
         index = self.bodies.index(body)
         self.forces[index] += force
-        self.torques[index] += force.cross(self.local_to_world(body, local_point) - self.positions[index])
+        self.torques[index] += (self.local_to_world(body, local_point) - self.positions[index]).cross(force)
 
     def copy(self) -> 'SystemState':
         copy = self.__class__()
