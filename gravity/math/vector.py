@@ -24,6 +24,11 @@ class Vector2:
     def __neg__(self) -> "Vector2":
         return self.__class__(-self.x, -self.y)
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Vector2):
+            return NotImplemented
+        return self.x == other.x and self.y == other.y
+
     def __len__(self) -> int:
         return 2
 
@@ -44,7 +49,10 @@ class Vector2:
         return sqrt(self.length_squared())
 
     def normalize(self) -> "Vector2":
-        return self / self.length()
+        length = self.length()
+        if length == 0:
+            return self.__class__()
+        return self / length
     
     def rotate(self, angle: int | float) -> "Vector2":
         cos_angle, sin_angle = cos(angle), sin(angle)

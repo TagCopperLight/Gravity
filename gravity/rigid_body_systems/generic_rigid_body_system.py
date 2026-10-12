@@ -22,11 +22,8 @@ class GenericRigidBodySystem(RigidBodySystem):
                 self.process_forces()
 
                 for i in range(len(self.system_state.bodies)):
-                    self.system_state.accelerations[i] = self.system_state.forces[i] / self.system_state.masses[i]
-                    if self.system_state.inertias[i] == 0:
-                        self.system_state.angular_accelerations[i] = 0
-                    else:
-                        self.system_state.angular_accelerations[i] = self.system_state.torques[i] / self.system_state.inertias[i]
+                    self.system_state.accelerations[i] = self.system_state.forces[i] * self.system_state.inverse_masses[i]
+                    self.system_state.angular_accelerations[i] = self.system_state.torques[i] * self.system_state.inverse_inertias[i]
 
                 self.ode_solver.solve(self.system_state)
             

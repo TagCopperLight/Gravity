@@ -19,5 +19,11 @@ class RigidBody:
     def world_to_local(self, point: Vector2) -> Vector2:
         return (point - self.position).rotate(-self.angle)
 
+    def inverse_mass(self) -> float:
+        return 0 if self.mass == 0 else 1 / self.mass
+
+    def inverse_inertia(self) -> float:
+        return 0 if self.inertia == 0 else 1 / self.inertia
+
     def energy(self) -> float:
         return 0.5 * self.mass * self.velocity.length_squared() + 0.5 * self.inertia * self.angular_velocity ** 2

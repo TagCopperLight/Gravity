@@ -24,6 +24,9 @@ class Vector2:
     def __neg__(self) -> "Vector2":
         ...
 
+    def __eq__(self, other: object) -> bool:
+        ...
+
     def __len__(self) -> int:
         ...
 
