@@ -35,3 +35,7 @@ class SpringForceGenerator(ForceGenerator):
 
         system_state.apply_force(self.body_1, force, self.local_position_1)
         system_state.apply_force(self.body_2, -force, self.local_position_2)
+
+    def energy(self, bodies: list[RigidBody]) -> float:
+        length = (self.body_2.local_to_world(self.local_position_2) - self.body_1.local_to_world(self.local_position_1)).length()
+        return 0.5 * self.spring_constant * (length - self.rest_length) ** 2

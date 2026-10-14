@@ -1,19 +1,30 @@
 from ..system_state import SystemState
 from .rigid_body import RigidBody
 from ..force_generators.force_generator import ForceGenerator
+from ..constraints.constraint import Constraint
 
 from ..math.vector import Vector2
 
 
 class RigidBodySystem:
-    def __init__(self, bodies: list[RigidBody], force_generators: list[ForceGenerator]) -> None:
+    def __init__(self, bodies: list[RigidBody], force_generators: list[ForceGenerator], constraints: list[Constraint] | None = None) -> None:
         self.bodies = bodies
         self.force_generators = force_generators
+        self.constraints = constraints if constraints is not None else []
 
         self.system_state = SystemState()
 
     def process(self, dt: float, steps: int) -> None:
         raise NotImplementedError
+
+    def kinetic_energy(self) -> float:
+        return sum(body.energy() for body in self.bodies)
+
+    def potential_energy(self) -> float:
+        return sum(generator.energy(self.bodies) for generator in self.force_generators)
+
+    def energy(self) -> float:
+        return self.kinetic_energy() + self.potential_energy()
 
     def populate_system_state(self) -> None:
         self.system_state.bodies = self.bodies

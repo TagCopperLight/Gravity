@@ -1,5 +1,6 @@
 from ..system_state import SystemState
 from .force_generator import ForceGenerator
+from ..rigid_body_systems.rigid_body import RigidBody
 
 
 class GravitationForceGenerator(ForceGenerator):
@@ -19,3 +20,16 @@ class GravitationForceGenerator(ForceGenerator):
 
                 system_state.forces[j] += force
                 system_state.forces[i] -= force
+
+    def energy(self, bodies: list[RigidBody]) -> float:
+        energy = 0.0
+        for i in range(len(bodies)):
+            for j in range(i + 1, len(bodies)):
+                distance = (bodies[i].position - bodies[j].position).length()
+
+                if distance == 0:
+                    continue
+
+                energy -= self.gravitational_constant * bodies[i].mass * bodies[j].mass / distance
+
+        return energy
