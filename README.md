@@ -21,7 +21,7 @@ from gravity.rigid_body_systems.rigid_body import RigidBody
 from gravity.rigid_body_systems.generic_rigid_body_system import GenericRigidBodySystem
 from gravity.force_generators.gravity_force_generator import GravityForceGenerator
 from gravity.force_generators.spring_force_generator import SpringForceGenerator
-from gravity.solvers.rk4_ode_solver import Rk4OdeSolver
+from gravity.ode_solvers.rk4_ode_solver import Rk4OdeSolver
 
 anchor = RigidBody(Vector2(0, 0), Vector2(), mass=0, angle=0, angular_velocity=0, inertia=0)
 weight = RigidBody(Vector2(1, -1), Vector2(), mass=1, angle=0, angular_velocity=0, inertia=0.1)

@@ -2,8 +2,8 @@ from .rigid_body_system import RigidBodySystem
 from .rigid_body import RigidBody
 from ..force_generators.force_generator import ForceGenerator
 from ..constraints.constraint import Constraint
-from ..solvers.ode_solver import OdeSolver
-from ..solvers.constraint_solver import ConstraintSolver
+from ..ode_solvers.ode_solver import OdeSolver
+from ..constraint_solvers.constraint_solver import ConstraintSolver
 
 
 class GenericRigidBodySystem(RigidBodySystem):
