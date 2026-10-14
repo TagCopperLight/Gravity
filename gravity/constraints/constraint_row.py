@@ -31,7 +31,7 @@ class ConstraintRow:
         inverse = 0.0
         for entry in self.entries:
             inverse += system_state.inverse_masses[entry.index] * entry.linear.length_squared()
-            inverse += system_state.inverse_inertias[entry.index] * entry.angular ** 2
+            inverse += system_state.inverse_inertias[entry.index] * (entry.angular * entry.angular)
 
         return 0 if inverse == 0 else 1 / inverse
 

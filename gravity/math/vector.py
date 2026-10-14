@@ -3,6 +3,8 @@ from typing import Generator
 
 
 class Vector2:
+    __slots__ = ("x", "y")
+
     def __init__(self, x: int | float=0, y: int | float=0)-> None:
         self.x, self.y = x, y
     
@@ -43,7 +45,7 @@ class Vector2:
         return f"Vector2({self.x}, {self.y})"
 
     def length_squared(self) -> int | float:
-        return self.x**2 + self.y**2
+        return self.x * self.x + self.y * self.y
 
     def length(self) -> int | float:
         return sqrt(self.length_squared())

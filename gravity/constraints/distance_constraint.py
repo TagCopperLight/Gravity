@@ -35,11 +35,17 @@ class DistanceConstraint(Constraint):
             return []
 
         direction = delta / distance
-        delta_velocity = system_state.velocity_at_point(self.body_2, self.local_position_2) - system_state.velocity_at_point(self.body_1, self.local_position_1)
+
+        # Point velocities v + w x r, from the lever arms computed above
+        angular_velocity_1 = system_state.angular_velocities[index_1]
+        angular_velocity_2 = system_state.angular_velocities[index_2]
+        velocity_1 = system_state.velocities[index_1] + angular_velocity_1 * Vector2(-r_1.y, r_1.x)
+        velocity_2 = system_state.velocities[index_2] + angular_velocity_2 * Vector2(-r_2.y, r_2.x)
+        delta_velocity = velocity_2 - velocity_1
 
         # d2C/dt2 = n . (a_p2 - a_p1) + dn/dt . (v_p2 - v_p1), where the point accelerations
         # carry a centripetal -w^2 r term not covered by J and dn/dt is the velocity normal to n over the distance
-        centripetal = r_1 * system_state.angular_velocities[index_1] ** 2 - r_2 * system_state.angular_velocities[index_2] ** 2
+        centripetal = r_1 * (angular_velocity_1 * angular_velocity_1) - r_2 * (angular_velocity_2 * angular_velocity_2)
         normal_velocity_squared = delta_velocity.length_squared() - delta_velocity.dot(direction) ** 2
         bias = direction.dot(centripetal) + normal_velocity_squared / distance
 

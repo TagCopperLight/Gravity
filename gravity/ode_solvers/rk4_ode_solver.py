@@ -2,6 +2,9 @@ from ..system_state import SystemState
 from .ode_solver import OdeSolver
 
 
+STAGE_WEIGHTS = {1: 1, 2: 2, 3: 2, 4: 1}
+
+
 class Rk4OdeSolver(OdeSolver):
     def __init__(self) -> None:
         super().__init__()
@@ -34,13 +37,13 @@ class Rk4OdeSolver(OdeSolver):
         return self.next_stage <= 4
     
     def solve(self, system_state: SystemState) -> None:
-        stage_weight = {1:1, 2:2, 3:2, 4:1}[self.stage]
+        weight = (self.dt / 6) * STAGE_WEIGHTS[self.stage]
 
         for i in range(len(system_state.bodies)):
-            self.accumulator.angular_velocities[i] += (self.dt / 6) * stage_weight * system_state.angular_accelerations[i]
-            self.accumulator.angles[i] += (self.dt / 6) * stage_weight * system_state.angular_velocities[i]
-            self.accumulator.velocities[i] += (self.dt / 6) * stage_weight * system_state.accelerations[i]
-            self.accumulator.positions[i] += (self.dt / 6) * stage_weight * system_state.velocities[i]
+            self.accumulator.angular_velocities[i] += weight * system_state.angular_accelerations[i]
+            self.accumulator.angles[i] += weight * system_state.angular_velocities[i]
+            self.accumulator.velocities[i] += weight * system_state.accelerations[i]
+            self.accumulator.positions[i] += weight * system_state.velocities[i]
         
         if self.stage == 4:
             system_state.angular_velocities = self.accumulator.angular_velocities
