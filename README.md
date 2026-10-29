@@ -4,6 +4,11 @@ A small 2D rigid body physics engine in pure Python. Bodies are moved by force
 generators (uniform gravity, N-body gravitation, springs, static forces) and
 integrated with an interchangeable ODE solver (Euler, semi-implicit Euler, RK4).
 
+![Chain](docs/screenshots/chain.png)
+
+*A chain of rigid links swinging under gravity, streamed live to
+[Aurora](https://github.com/TagCopperLight/Aurora).*
+
 ## Install
 
 Gravity has no dependencies and needs Python 3.10 or newer. Add it to a uv project
